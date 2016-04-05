@@ -1,0 +1,13 @@
+sbin/mongooseim
+sbin/mongooseimctl
+@dir(rabbitmq,rabbitmq,750)  %%MONGOOSEIM_CONFDIR%%
+@dir %%MONGOOSEIM_HOMEDIR%%
+@dir %%MONGOOSEIM_LIBDIR%%
+@dir(rabbitmq,rabbitmq,755) /var/db/mongooseim
+@dir(rabbitmq,rabbitmq,750) /var/log/mongooseim
+@sample(rabbitmq,rabbitmq,750) %%MONGOOSEIM_CONFDIR%%/ejabberd.cfg.sample
+@sample(rabbitmq,rabbitmq,750) %%MONGOOSEIM_CONFDIR%%/app.config.sample
+@sample(rabbitmq,rabbitmq,750) %%MONGOOSEIM_CONFDIR%%/vm.args.sample
+@sample(rabbitmq,rabbitmq,750) %%MONGOOSEIM_CONFDIR%%/cert.pem.sample
+@sample(rabbitmq,rabbitmq,750) %%MONGOOSEIM_CONFDIR%%/key.pem.sample
+@sample(rabbitmq,rabbitmq,750) %%MONGOOSEIM_CONFDIR%%/server.pem.sample

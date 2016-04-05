@@ -1,0 +1,29 @@
+--- rel/files/mongooseim.orig	2016-02-15 07:47:05 UTC
++++ rel/files/mongooseim
+@@ -1,12 +1,13 @@
+-#!/bin/bash
++#!/bin/sh
+ # -*- tab-width:4;indent-tabs-mode:nil -*-
+ # ex: ts=4 sw=4 et
+ 
+ RUNNER_SCRIPT_DIR=$(cd ${0%/*} && pwd)
+ 
+-RUNNER_BASE_DIR=${RUNNER_SCRIPT_DIR%/*}
+-RUNNER_ETC_DIR=$RUNNER_BASE_DIR/etc
+-RUNNER_LOG_DIR={{mongooseim_runner_log_dir}}
++RUNNER_BASE_DIR=${RUNNER_SCRIPT_DIR%/*}/lib/mongooseim
++RUNNER_ETC_DIR=${RUNNER_SCRIPT_DIR%/*}/etc/mongooseim
++RUNNER_LOG_DIR=/var/log/mongooseim
++RUNNER_DB_DIR=/var/db/mongooseim
+ # Note the trailing slash on $PIPE_DIR/
+ PIPE_DIR=/tmp/mongooseim_pipe_`whoami`/
+ RUNNER_USER=
+@@ -109,7 +110,7 @@ case "$1" in
+             exit 1
+         fi
+ 
+-        MNESIA_DIR="$RUNNER_BASE_DIR/Mnesia.$NODE"
++        MNESIA_DIR="$RUNNER_DB_DIR/Mnesia.$NODE"
+         if [ -d "$MNESIA_DIR" ]; then
+             echo "Error: $MNESIA_DIR already exists. Please remove whole directory before continuing."
+             exit 1

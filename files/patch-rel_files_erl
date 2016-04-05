@@ -1,0 +1,15 @@
+--- rel/files/erl.orig	2016-02-15 07:47:05 UTC
++++ rel/files/erl
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ 
+ ## This script replaces the default "erl" in erts-VSN/bin. This is necessary
+ ## as escript depends on erl and in turn, erl depends on having access to a
+@@ -31,4 +31,4 @@ export ROOTDIR
+ export BINDIR
+ export PROGNAME
+ 
+-exec $CMD -boot $ROOTDIR/releases/$APP_VSN/start_clean ${1+"$@"}
+\ No newline at end of file
++exec $CMD -boot $ROOTDIR/releases/$APP_VSN/start_clean ${1+"$@"}

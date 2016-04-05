@@ -1,0 +1,13 @@
+--- rel/files/mongooseimctl.orig	2016-02-15 07:47:05 UTC
++++ rel/files/mongooseimctl
+@@ -1,8 +1,8 @@
+ #!/bin/sh
+ 
+ RUNNER_SCRIPT_DIR=$(cd ${0%/*} && pwd)
+-EJABBERD_DIR=${RUNNER_SCRIPT_DIR%/*}
+-EJABBERD_VMARGS_PATH=$EJABBERD_DIR/etc/vm.args
++EJABBERD_DIR=${RUNNER_SCRIPT_DIR%/*}/lib/mongooseim
++EJABBERD_VMARGS_PATH=${RUNNER_SCRIPT_DIR%/*}/etc/mongooseim/vm.args
+ START_ERL=`cat $EJABBERD_DIR/releases/start_erl.data`
+ ERTS_VSN=${START_ERL% *}
+ ERTS_PATH=$EJABBERD_DIR/erts-$ERTS_VSN/bin
