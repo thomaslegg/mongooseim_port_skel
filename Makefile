@@ -3,7 +3,7 @@
 
 PORTNAME=	MongooseIM
 PORTVERSION=	1.6.2
-CATEGORIES=	net-im
+CATEGORIES=	local
 MASTER_SITES=	https://github.com/esl/${PORTNAME}/archive/${PORTVERSION}/
 DISTNAME=	${PORTNAME}-${PORTVERSION}
 
@@ -12,17 +12,14 @@ COMMENT=	MongooseIM is an XMPP server focusing on performance and scalability
 
 LICENSE=	GPLv2
 
-BUILD_DEPENDS=	erl:${PORTSDIR}/lang/erlang 
+BUILD_DEPENDS=	erl:${PORTSDIR}/lang/erlang
+BUILD_DEPENDS+=	git:${PORTSDIR}/devel/git-lite
 LIB_DEPENDS=	libexpat.so:${PORTSDIR}/textproc/expat2
 RUN_DEPENDS=	erl:${PORTSDIR}/lang/erlang-runtime18 
 
 
-USES=		gmake #shebangfix
-#SHEBANG_FILES=	rel/files/erl \
-#	rel/files/mongooseim \
-#	tools/compile_riak_pb.sh
+USES=		gmake 
 
-#USE_RC_SUBR=	riak
 CPPFLAGS+=      -I${LOCALBASE}/include
 LIBS+=          -L${LOCALBASE}/lib
 
@@ -50,22 +47,16 @@ MAKE_ENV=	PATH=${LOCALBASE}/lib/erlang/bin:${PATH}
 
 .include <bsd.port.options.mk>
 
-post-patch:
-#	@${REINPLACE_CMD} 's|%%PREFIX%%|${PREFIX}|g' ${WRKSRC}/rel/vars.config
-
 pre-install:
 	${RM} -f ${PLIST}
 	${CAT} ${PKGDIR}/pkg-plist >> ${PLIST}
 	(cd ${WRKSRC}/rel/mongooseim; ${FIND} releases -type f \
 		| ${AWK} '{print $$0}' | ${SED} -e 's/^/lib\/mongooseim\//' >> ${PLIST})
-	(cd ${WRKSRC}/rel/mongooseim/erts-7.3 ; ${FIND} . -type f \
-		| ${AWK} '{print $$0}' | ${SED} 's/\.//' \
-		| ${AWK} '{print "lib/mongooseim/erts-7.3"$$0 }' >> ${PLIST})
+	(cd ${WRKSRC}/rel/mongooseim/ ; ${FIND} erts-*/ -type f \
+		| ${AWK} '{print "lib/mongooseim/"$$0 }' >> ${PLIST})
 	(cd ${WRKSRC}/rel; ${FIND} mongooseim/lib -type f \
 		| ${AWK} '{print $$0}' | ${SED} -e 's/^/lib\//' >> ${PLIST})
-#		| ${AWK} '{print "lib/"$$0 }' >> ${PLIST})
-#	${ECHO} "@owner" >> ${PLIST}
-#	${ECHO} "@group" >> ${PLIST}
+
 
 do-install:
 .for d in ${MONGOOSEIM_CONFDIR} ${MONGOOSEIM_LOGDIR} ${MONGOOSEIM_DBDIR} ${MONGOOSEIM_LIBDIR} ${MONGOOSEIM_HOMEDIR}
@@ -77,16 +68,9 @@ do-install:
 	${INSTALL_DATA} ${WRKSRC}/rel/mongooseim/priv/ssl/fake_cert.pem ${STAGEDIR}${MONGOOSEIM_CONFDIR}/cert.pem.sample
 	${INSTALL_DATA} ${WRKSRC}/rel/mongooseim/priv/ssl/fake_key.pem ${STAGEDIR}${MONGOOSEIM_CONFDIR}/key.pem.sample
 	${INSTALL_DATA} ${WRKSRC}/rel/mongooseim/priv/ssl/fake_server.pem ${STAGEDIR}${MONGOOSEIM_CONFDIR}/server.pem.sample
-#	(cd ${WRKSRC}/rel/mongooseim/lib/ && ${COPYTREE_BIN} . ${STAGEDIR}${MONGOOSEIM_LIBDIR})
 	${CP} -Rp ${WRKSRC}/rel/mongooseim/lib/* ${STAGEDIR}${MONGOOSEIM_LIBDIR}
-#	(cd ${WRKSRC}/rel/mongooseim/bin/ && ${COPYTREE_BIN} . ${STAGEDIR}${PREFIX}/sbin/)
 	${CP} -Rp ${WRKSRC}/rel/mongooseim/bin/* ${STAGEDIR}${PREFIX}/sbin
-#	(cd ${WRKSRC}/rel/riak/releases && ${COPYTREE_SHARE} . ${STAGEDIR}${RIAK_HOMEDIR}/releases)
 	${CP} -Rp ${WRKSRC}/rel/mongooseim/releases  ${STAGEDIR}${MONGOOSEIM_HOMEDIR}
 	${CP} -Rp ${WRKSRC}/rel/mongooseim/erts-* ${STAGEDIR}${MONGOOSEIM_HOMEDIR}
-#	${INSTALL_MAN} ${WRKSRC}/doc/man/man1/riak.1.gz ${STAGEDIR}${MANPREFIX}/man/man1/
-#	${INSTALL_MAN} ${WRKSRC}/doc/man/man1/riak-admin.1.gz ${STAGEDIR}${MANPREFIX}/man/man1/
-#	${INSTALL_MAN} ${WRKSRC}/doc/man/man1/riak-debug.1.gz ${STAGEDIR}${MANPREFIX}/man/man1/
-#	${INSTALL_MAN} ${WRKSRC}/doc/man/man1/search-cmd.1.gz ${STAGEDIR}${MANPREFIX}/man/man1/
 
 .include <bsd.port.mk>
